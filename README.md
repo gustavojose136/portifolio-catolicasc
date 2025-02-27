@@ -108,4 +108,8 @@ Serão implementadas medidas de segurança, incluindo:
 
 Este projeto visa fornecer uma solução completa para a gestão hoteleira, integrando funcionalidades essenciais em uma plataforma única e moderna. A utilização de tecnologias como .NET, Angular/Next.js e MySQL/SQL Server garantirá a robustez e escalabilidade necessárias para atender às demandas do setor.
 
-*Nota: Este é um esboço inicial do RFC. Detalhamentos adicionais podem ser incluídos conforme o avanço do projeto e a especificação de novos requisitos.*
+# A se pensar
+- Chat-bot:
+    - Envio de analises diarias/semanais/mensais para o usuário (Dono do hotel)
+    - Acompanhamento mensal pelo chat-bot
+    - Ser possivel realizar a reserva pelo whats-app
