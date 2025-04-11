@@ -1,115 +1,150 @@
-# Sistema de Gestão Hoteleira
+# Capa
 
-**Nome do Estudante:** Gustavo José Rosa
-**Curso:** Engenharia de Software  
-**Data de Entrega:** [Data]
+- **Título do Projeto**: Sistema de Gestão Hoteleira
+- **Nome do Estudante**: Gustavo José Rosa
+- **Curso**: Engenharia de Software
+- **Data de Entrega**: [Data]
 
-## Resumo
+# Resumo
 
-Este documento apresenta a proposta de desenvolvimento de um Sistema de Gestão Hoteleira, abrangendo funcionalidades como reservas online, gerenciamento financeiro e integração com um chatbot para atendimento ao cliente. O sistema será desenvolvido com back-end em .NET, front-end em Angular ou Next.js, e utilizará o banco de dados MySQL ou SQL Server.
+Este documento apresenta a proposta de desenvolvimento de um Sistema de Gestão Hoteleira que integra reservas online (inclusive via WhatsApp), gerenciamento financeiro, dashboards analíticos em tempo real e atendimento automatizado via chatbot. O projeto utiliza tecnologias modernas, com pipeline de CI/CD para testes automatizados e deploy contínuo, e será implementado utilizando AWS para o back-end e banco de dados, enquanto o chatbot e o front-end serão deployados na Vercel.
 
 ## 1. Introdução
 
-### 1.1. Contexto
+- **Contexto**:  
+  O setor hoteleiro demanda soluções integradas que automatizem o controle de reservas, pagamentos e comunicação com os clientes. Este projeto visa modernizar a gestão hoteleira, utilizando tecnologias de ponta e práticas ágeis para oferecer uma solução robusta e escalável.
 
-A gestão eficiente de hotéis requer sistemas integrados que facilitem o controle de reservas, pagamentos e comunicação com os clientes. A adoção de tecnologias modernas pode otimizar esses processos, proporcionando uma melhor experiência tanto para os administradores quanto para os hóspedes.
+- **Justificativa**:  
+  Com a concorrência crescente e a necessidade de otimizar processos, a centralização e automação dos sistemas gerenciais são essenciais para reduzir erros operacionais, melhorar a experiência dos usuários e agilizar o desenvolvimento por meio de CI/CD.
 
-### 1.2. Justificativa
-
-A implementação de um sistema integrado de gestão hoteleira visa automatizar processos manuais, reduzir erros operacionais e melhorar a satisfação dos clientes através de um atendimento mais ágil e personalizado.
-
-### 1.3. Objetivos
-
-- **Objetivo Principal:** Desenvolver um sistema web para gestão de hotéis que inclua funcionalidades de reserva, controle financeiro e atendimento ao cliente via chatbot.
-- **Objetivos Secundários:**
-  - Implementar notificações em tempo real para atualizações de reservas.
-  - Integrar o sistema com plataformas de pagamento online.
-  - Fornecer relatórios gerenciais para apoio à tomada de decisão.
+- **Objetivos**:  
+  - **Principal:** Desenvolver uma plataforma web para gestão hoteleira com reservas online, controle financeiro, dashboards analíticos e atendimento via chatbot com integração para WhatsApp.  
+  - **Secundários:**  
+    - Implementar notificações e dashboards em tempo real.  
+    - Integrar com plataformas de pagamento online.  
+    - Estabelecer um pipeline de CI/CD para garantir testes automatizados, monitoramento e deploy contínuo.  
+    - Implantar o back-end e o banco de dados em instâncias AWS, enquanto o chatbot e o front-end serão deployados na Vercel.
 
 ## 2. Descrição do Projeto
 
-### 2.1. Tema do Projeto
+- **Tema do Projeto**:  
+  Desenvolvimento de um Sistema de Gestão Hoteleira moderno que automatiza processos críticos, integrando reservas online, gestão financeira, dashboards e atendimento automatizado.
 
-Desenvolvimento de um Sistema de Gestão Hoteleira com funcionalidades de reservas online, gerenciamento financeiro e integração com chatbot para atendimento ao cliente.
+- **Problemas a Resolver**:  
+  - Controle manual de reservas e disponibilidade dos quartos.  
+  - Falta de centralização na gestão financeira e emissão de notas fiscais.  
+  - Comunicação ineficiente com os clientes.  
+  - Ausência de um processo automatizado que garanta qualidade e agilidade nas atualizações.
 
-### 2.2. Problemas a Resolver
-
-- Dificuldade no controle manual de reservas e disponibilidade de quartos.
-- Falta de um sistema centralizado para gestão financeira e emissão de notas fiscais.
-- Comunicação ineficiente com os clientes, resultando em baixa satisfação.
-
-### 2.3. Limitações
-
-- O sistema não incluirá funcionalidades de gerenciamento de restaurantes ou serviços de quarto.
-- A integração com plataformas externas de reservas (como OTAs) não será contemplada nesta versão.
+- **Limitações**:  
+  - O sistema não incluirá funcionalidades específicas para gerenciamento de restaurantes ou serviços de quarto nesta versão.  
+  - A integração com plataformas externas de reservas (ex.: OTAs) será considerada apenas em futuras atualizações.
 
 ## 3. Especificação Técnica
 
+Descrição detalhada da proposta, abordando os requisitos de software, processos, integrações e a implantação em diferentes ambientes.
+
 ### 3.1. Requisitos de Software
 
-#### 3.1.1. Requisitos Funcionais (RF)
+- **Lista de Requisitos:**  
+  **Requisitos Funcionais (RF):**
+  1. Permitir reservas online realizadas pelos clientes, inclusive via WhatsApp.
+  2. Gerenciar o cadastro de hóspedes com informações pessoais e histórico de estadias.
+  3. Controlar a disponibilidade e o cadastro de quartos.
+  4. Processar pagamentos online e emitir notas fiscais.
+  5. Gerar relatórios financeiros e operacionais detalhados.
+  6. Integrar um chatbot para atendimento automatizado, permitindo consultas e envio de análises (diárias, semanais e mensais).
+  7. Enviar notificações em tempo real sobre alterações nas reservas e atualizações do sistema.
+  8. Disponibilizar dashboards analíticos em tempo real para a gestão do hotel.
+  9. Implementar um pipeline de CI/CD com testes automatizados (unitários, integração e regressão) e deploy automático.
 
-1. **RF01:** O sistema deve permitir que clientes realizem reservas online.
-2. **RF02:** O sistema deve gerenciar o cadastro de hóspedes, incluindo informações pessoais e histórico de estadias.
-3. **RF03:** O sistema deve controlar a disponibilidade e o cadastro de quartos.
-4. **RF04:** O sistema deve processar pagamentos online e emitir notas fiscais.
-5. **RF05:** O sistema deve fornecer relatórios financeiros e operacionais.
-6. **RF06:** O sistema deve integrar-se a um chatbot para atendimento ao cliente.
-7. **RF07:** O sistema deve enviar notificações em tempo real sobre alterações nas reservas.
+  **Requisitos Não Funcionais (RNF):**
+  1. Utilizar .NET para o desenvolvimento do back-end.
+  2. Desenvolver o front-end com Angular ou Next.js, assegurando responsividade.
+  3. Empregar MySQL ou SQL Server para o gerenciamento dos dados.
+  4. Assegurar a segurança dos dados, seguindo as normas da LGPD, com criptografia e controle de acesso.
+  5. Suportar múltiplos usuários simultâneos mantendo desempenho adequado.
+  6. Otimizar o tempo de build e deploy com rollback imediato em caso de falhas.
 
-#### 3.1.2. Requisitos Não Funcionais (RNF)
+- **Representação dos Requisitos:**  
+  [![](https://mermaid.ink/img/pako:eNplVM1u00AQfpXVSpVSKWljJ7hJbpZdUg4JbZSqEoTDxDtNFmyvtbsu_VEfggtXLhWcOCKOHPomPAGPwDixnRh8iPPNfN_MePazH3ikBPIRv47Vx2gN2rJ5uEgZXQcHzLdKo2EtjRndMbUglGGRShgm6r1kGWhgRiZ5DJotVYqRModbte-8_fPl0xMLYkk6fFdG3W3UF4lMpbGaCuoq16Pc02cWrMEula2i_ULxk4V48zozFKyHC8DQMALZpVGsVQxlnr8nSxWr7VwyFTKiucAweP72_AOr0WaXrQX__fUXmyHE8p4oM3o4fQOsdYXL4yvqb_wsO1zwUhCEpSBQqcljS4pQmkylciljKUBgTZ2d_1v7HFaQ0ApUzfH9kuNbpBk3SebnViVgSSJ2zO3v-Kzkj1FjGkkqeqZMhgJNzRxf_Me5yOk01Y5yOi0pp4m0UrOpssBeShNBvCsz25XZ7CUGsoDcqzKpdjGhx6dcsQsw66UCLWrStG6V3hSjUCt5TYcRqb2Ry6nmJXWOxpLX9vdAzgteHQfh7iTCanUhZrG6q9mRalB3HiFP3hZHz2jJGhmVhK2nkRnMycuViXKjKuOyTqdDJmnAIGxmzxvQ96uevrsJjM-a8KIBT6fN7KwBJ2EDTpvkvVa9OrAHC3r15mybzRswJDpv85WWgo-szrHNE9QJFJA_FNQFt2tMyNIj-itAf1jwRfpImgzSN0ollUyrfLXmo2uIDaE8E2AxlLDSkNRR8qJAHag8tXw0HHY3Rfjogd_yUWfgDI88z_HcgTNwnUHXa_M7YnlHruP0nW7PG3Zf9IbuY5vfb9q6Rz3P8_okO3FO-t0Tt9fmKAoTTrbfsM2n7PEvNyuDAg?type=png)](https://mermaid.live/edit#pako:eNplVM1u00AQfpXVSpVSKWljJ7hJbpZdUg4JbZSqEoTDxDtNFmyvtbsu_VEfggtXLhWcOCKOHPomPAGPwDixnRh8iPPNfN_MePazH3ikBPIRv47Vx2gN2rJ5uEgZXQcHzLdKo2EtjRndMbUglGGRShgm6r1kGWhgRiZ5DJotVYqRModbte-8_fPl0xMLYkk6fFdG3W3UF4lMpbGaCuoq16Pc02cWrMEula2i_ULxk4V48zozFKyHC8DQMALZpVGsVQxlnr8nSxWr7VwyFTKiucAweP72_AOr0WaXrQX__fUXmyHE8p4oM3o4fQOsdYXL4yvqb_wsO1zwUhCEpSBQqcljS4pQmkylciljKUBgTZ2d_1v7HFaQ0ApUzfH9kuNbpBk3SebnViVgSSJ2zO3v-Kzkj1FjGkkqeqZMhgJNzRxf_Me5yOk01Y5yOi0pp4m0UrOpssBeShNBvCsz25XZ7CUGsoDcqzKpdjGhx6dcsQsw66UCLWrStG6V3hSjUCt5TYcRqb2Ry6nmJXWOxpLX9vdAzgteHQfh7iTCanUhZrG6q9mRalB3HiFP3hZHz2jJGhmVhK2nkRnMycuViXKjKuOyTqdDJmnAIGxmzxvQ96uevrsJjM-a8KIBT6fN7KwBJ2EDTpvkvVa9OrAHC3r15mybzRswJDpv85WWgo-szrHNE9QJFJA_FNQFt2tMyNIj-itAf1jwRfpImgzSN0ollUyrfLXmo2uIDaE8E2AxlLDSkNRR8qJAHag8tXw0HHY3Rfjogd_yUWfgDI88z_HcgTNwnUHXa_M7YnlHruP0nW7PG3Zf9IbuY5vfb9q6Rz3P8_okO3FO-t0Tt9fmKAoTTrbfsM2n7PEvNyuDAg)
 
-1. **RNF01:** O sistema deve ser desenvolvido utilizando a plataforma .NET para o back-end.
-2. **RNF02:** O front-end deve ser implementado em Angular ou Next.js.
-3. **RNF03:** O banco de dados utilizado deve ser MySQL ou SQL Server.
-4. **RNF04:** O sistema deve garantir a segurança dos dados dos usuários, seguindo as normas da LGPD.
-5. **RNF05:** O sistema deve ser responsivo, adaptando-se a diferentes dispositivos e tamanhos de tela.
-6. **RNF06:** O sistema deve suportar múltiplos usuários simultaneamente, garantindo desempenho adequado.
+### 3.2. Considerações de Design
 
-### 3.2. Representação dos Requisitos
+- **Discussão sobre as Escolhas de Design:**  
+  Foram avaliadas diversas alternativas para garantir escalabilidade, modularidade e facilidade de manutenção. A solução adotada privilegia a separação clara entre as camadas de apresentação, aplicação e dados, facilitando a integração contínua e futuras expansões.
 
-**Diagrama de Casos de Uso:**
+- **Visão Inicial da Arquitetura:**  
+  - **Camada de Apresentação:** Desenvolvida com Angular ou Next.js, garantindo uma interface responsiva.  
+  - **Camada de Aplicação:** Lógica de negócio implementada em .NET com comunicação via APIs RESTful.  
+  - **Camada de Dados:** Gerenciamento dos dados utilizando MySQL ou SQL Server.  
+  - **Camada de Integração (CI/CD):** Pipeline automatizado para build, testes, deploy e monitoramento contínuo.
 
-*Nota: Devido às limitações de texto, a representação gráfica do diagrama de casos de uso não pode ser exibida aqui. Recomenda-se utilizar uma ferramenta de modelagem UML para criar o diagrama, incluindo atores como "Cliente", "Administrador" e "Chatbot", e casos de uso correspondentes aos requisitos funcionais listados.*
+- **Padrões de Arquitetura:**  
+  O projeto adota o padrão MVC para o back-end e práticas de Microserviços, quando aplicável, facilitando a manutenção e escalabilidade.
 
-### 3.3. Arquitetura do Sistema
+- **Modelos C4:**  
+  A arquitetura será detalhada em quatro níveis:  
+  - **Contexto:** Visão geral do sistema e seus usuários.  
+  - **Contêineres:** Separação entre interface, lógica de negócio e armazenamento de dados.  
+  - **Componentes:** Divisão interna dos contêineres em módulos funcionais.  
+  - **Código:** Estrutura detalhada para implementação e manutenção do código.
 
-O sistema será desenvolvido seguindo a arquitetura de três camadas:
+### 3.3. Stack Tecnológica
 
-1. **Camada de Apresentação:** Implementada com Angular ou Next.js, responsável pela interface com o usuário.
-2. **Camada de Aplicação:** Back-end desenvolvido em .NET, contendo a lógica de negócios.
-3. **Camada de Dados:** Banco de dados MySQL ou SQL Server para armazenamento das informações.
+- **Linguagens de Programação:**  
+  - Back-end: C# com .NET  
+  - Front-end: TypeScript/JavaScript com Angular ou Next.js
 
-### 3.4. Integração com Chatbot
+- **Frameworks e Bibliotecas:**  
+  - .NET para desenvolvimento do servidor  
+  - Angular ou Next.js para a interface do usuário  
+  - Bibliotecas para integração de APIs RESTful e autenticação
 
-O chatbot será integrado ao sistema para fornecer atendimento automatizado aos clientes, permitindo consultas sobre disponibilidade de quartos, realização de reservas e esclarecimento de dúvidas comuns. A comunicação entre o chatbot e o sistema será realizada através de APIs RESTful.
+- **Ferramentas de Desenvolvimento e Gestão de Projeto:**  
+  - Versionamento: Git  
+  - Gestão de projetos: Trello, Jira ou ferramenta similar  
+  - Pipeline de CI/CD: GitHub Actions, GitLab CI ou Jenkins
 
-### 3.5. Segurança
+- **Infraestrutura e Implantação:**  
+  - **AWS:**  
+    - O back-end e o banco de dados serão deployados em instâncias AWS, garantindo escalabilidade, segurança e alta disponibilidade.  
+  - **Vercel:**  
+    - O front-end e o chatbot serão deployados na Vercel, aproveitando sua capacidade de oferecer deploys rápidos e gerenciamento simplificado de aplicações front-end.
 
-Serão implementadas medidas de segurança, incluindo:
+### 3.4. Considerações de Segurança
 
-- Criptografia de dados sensíveis.
-- Autenticação e autorização de usuários.
-- Validação de entradas para prevenir ataques como SQL Injection e Cross-Site Scripting (XSS).
+- **Medidas de Segurança:**  
+  - Criptografia de dados sensíveis (tanto em trânsito quanto em repouso).  
+  - Implementação de autenticação e autorização robusta.  
+  - Validação de entradas para mitigar riscos de SQL Injection e Cross-Site Scripting (XSS).  
+  - Adoção de práticas conformes à LGPD para garantir a privacidade dos dados dos usuários.
 
-## 4. Cronograma
+## 4. Próximos Passos
 
-| Fase                         | Descrição                                         | Duração Estimada |
-|------------------------------|---------------------------------------------------|------------------|
-| **1. Levantamento de Requisitos** | Coleta e análise das necessidades do sistema.     | 2 semanas        |
-| **2. Design do Sistema**          | Definição da arquitetura e modelagem dos componentes. | 3 semanas        |
-| **3. Desenvolvimento do Back-end**| Implementação da lógica de negócios em .NET.      | 4 semanas        |
-| **4. Desenvolvimento do Front-end**| Criação da interface do usuário em Angular ou Next.js. | 4 semanas        |
-| **5. Integração com Chatbot**     | Desenvolvimento e integração do chatbot ao sistema. | 3 semanas        |
-| **6. Testes e Validação**         | Verificação e validação de todas as funcionalidades. | 2 semanas        |
-| **7. Implantação**                | Deploy do sistema em ambiente de produção.        | 1 semana         |
+Após a finalização deste documento, os próximos passos incluem:
+- Refinamento dos requisitos e ajustes na arquitetura com base em feedback de revisões.
+- Início do desenvolvimento e configuração do ambiente de CI/CD, iniciando pela definição do pipeline e execução dos testes automatizados.
+- Configuração das instâncias AWS para o back-end e banco de dados, e preparação do deploy do front-end e chatbot na Vercel.
+- Planejamento detalhado das fases de desenvolvimento para Portfólio I e Portfólio II, com acompanhamento contínuo dos processos de build e deploy.
 
-## 5. Considerações Finais
+## 5. Referências
 
-Este projeto visa fornecer uma solução completa para a gestão hoteleira, integrando funcionalidades essenciais em uma plataforma única e moderna. A utilização de tecnologias como .NET, Angular/Next.js e MySQL/SQL Server garantirá a robustez e escalabilidade necessárias para atender às demandas do setor.
+- Documentação oficial do .NET  
+- Documentação do Angular / Next.js  
+- Guias e tutoriais sobre CI/CD (GitHub Actions, GitLab CI, Jenkins)  
+- Documentação da AWS (Amazon Web Services)  
+- Documentação da Vercel  
+- Normas e diretrizes da LGPD para proteção de dados
 
-# A se pensar
-- Chat-bot:
-    - Envio de analises diarias/semanais/mensais para o usuário (Dono do hotel)
-    - Acompanhamento mensal pelo chat-bot
-    - Ser possivel realizar a reserva pelo whats-app
+## 6. Apêndices (Opcionais)
+
+- Diagramas UML ilustrando os Casos de Uso e a arquitetura do sistema.  
+- Especificações técnicas detalhadas dos módulos e integrações.  
+- Logs e métricas dos testes automatizados (quando disponíveis).
+
+## 7. Avaliações de Professores
+
+- Considerações Professor/a:  
+- Considerações Professor/a:  
+- Considerações Professor/a:
