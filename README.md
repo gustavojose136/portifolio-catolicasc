@@ -13,7 +13,7 @@ Este documento apresenta a proposta de desenvolvimento de **RabbitSuites**, uma 
 - Fila de mensagens RabbitMQ para orquestração de criação/consulta de reservas  
 - Automação diária: envio de e-mail de NF-e ao hóspede e lembrete de check-out  
 - Dashboards analíticos em tempo real  
-- Emissão de notas fiscais eletrônicas (NF-e)  *A se pensar na possibilidade*
+- Emissão de notas fiscais eletrônicas (NF-e)  *A se pensar na possibilidade - fazer piloto com só um hotel*
 - Sistema de **Token Bucket** para limitação de taxa em chamadas críticas  
 - **Circuit Breaker** para isolar falhas em serviços externos (NF-e, gateway de pagamento)  
 - **Caching Distribuído** (Redis) para acelerar consultas caras e projeções de dashboard  
