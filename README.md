@@ -1,13 +1,13 @@
 # Capa
 
-- **Título do Projeto**: HotelManager Pro – Gestão de Quartos, Reservas e Emissão de NF-e com Chatbot WhatsApp  
+- **Título do Projeto**: RabbitSuites – Gestão de Quartos, Reservas e Emissão de NF-e com Chatbot WhatsApp  
 - **Nome do Estudante**: Gustavo José Rosa  
 - **Curso**: Engenharia de Software  
 - **Data de Entrega**: [Data]
 
 # Resumo
 
-Este documento apresenta a proposta de desenvolvimento de **HotelManager Pro**, uma plataforma web para gestão hoteleira que unifica:
+Este documento apresenta a proposta de desenvolvimento de **RabbitSuites**, uma plataforma web para gestão hoteleira que unifica:
 
 - Controle de quartos e reservas (via web e WhatsApp, usando Baileys)  
 - Fila de mensagens RabbitMQ para orquestração de criação/consulta de reservas  
