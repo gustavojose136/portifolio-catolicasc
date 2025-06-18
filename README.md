@@ -1,150 +1,176 @@
 # Capa
 
-- **Título do Projeto**: Sistema de Gestão Hoteleira
-- **Nome do Estudante**: Gustavo José Rosa
-- **Curso**: Engenharia de Software
+- **Título do Projeto**: HotelManager Pro – Gestão de Quartos, Reservas e Emissão de NF-e com Chatbot WhatsApp  
+- **Nome do Estudante**: Gustavo José Rosa  
+- **Curso**: Engenharia de Software  
 - **Data de Entrega**: [Data]
 
 # Resumo
 
-Este documento apresenta a proposta de desenvolvimento de um Sistema de Gestão Hoteleira que integra reservas online (inclusive via WhatsApp), gerenciamento financeiro, dashboards analíticos em tempo real e atendimento automatizado via chatbot. O projeto utiliza tecnologias modernas, com pipeline de CI/CD para testes automatizados e deploy contínuo, e será implementado utilizando AWS para o back-end e banco de dados, enquanto o chatbot e o front-end serão deployados na Vercel.
+Este documento apresenta a proposta de desenvolvimento de **HotelManager Pro**, uma plataforma web para gestão hoteleira que unifica:
+
+- Controle de quartos e reservas (via web e WhatsApp, usando Baileys)  
+- Fila de mensagens RabbitMQ para orquestração de criação/consulta de reservas  
+- Automação diária: envio de e-mail de NF-e ao hóspede e lembrete de check-out  
+- Dashboards analíticos em tempo real  
+- Emissão de notas fiscais eletrônicas (NF-e)  *A se pensar na possibilidade*
+- Sistema de **Token Bucket** para limitação de taxa em chamadas críticas  
+- **Circuit Breaker** para isolar falhas em serviços externos (NF-e, gateway de pagamento)  
+- **Caching Distribuído** (Redis) para acelerar consultas caras e projeções de dashboard  
+- Chatbot no WhatsApp para reservas e alertas  
+- Área administrativa para dono/gestor do hotel  
+
+O pipeline de CI/CD garante testes automatizados e deploy contínuo: back-end e banco em AWS; front-end e chatbot na Vercel.
 
 ## 1. Introdução
 
-- **Contexto**:  
-  O setor hoteleiro demanda soluções integradas que automatizem o controle de reservas, pagamentos e comunicação com os clientes. Este projeto visa modernizar a gestão hoteleira, utilizando tecnologias de ponta e práticas ágeis para oferecer uma solução robusta e escalável.
+- **Contexto**  
+  O setor hoteleiro exige soluções de alta disponibilidade e performance para suportar picos de acesso (web e WhatsApp), emissão de documentos fiscais e comunicação em tempo real.  
 
-- **Justificativa**:  
-  Com a concorrência crescente e a necessidade de otimizar processos, a centralização e automação dos sistemas gerenciais são essenciais para reduzir erros operacionais, melhorar a experiência dos usuários e agilizar o desenvolvimento por meio de CI/CD.
+- **Justificativa**  
+  Com grande volume de mensagens e integrações externas, adotamos RabbitMQ, Token Bucket e Circuit Breaker para resiliência, além de Caching Distribuído para reduzir latência e carga no banco de dados.  
 
-- **Objetivos**:  
-  - **Principal:** Desenvolver uma plataforma web para gestão hoteleira com reservas online, controle financeiro, dashboards analíticos e atendimento via chatbot com integração para WhatsApp.  
+- **Objetivos**  
+  - **Principal:** Desenvolver plataforma integrada para gestão de quartos, reservas, NF-e e atendimento via chatbot.  
   - **Secundários:**  
-    - Implementar notificações e dashboards em tempo real.  
-    - Integrar com plataformas de pagamento online.  
-    - Estabelecer um pipeline de CI/CD para garantir testes automatizados, monitoramento e deploy contínuo.  
-    - Implantar o back-end e o banco de dados em instâncias AWS, enquanto o chatbot e o front-end serão deployados na Vercel.
+    - Orquestrar mensagens com RabbitMQ.  
+    - Controlar taxa de requisições críticas (Token Bucket).  
+    - Isolar falhas externas (Circuit Breaker).  
+    - Acelerar consultas com Redis (Caching).  
+    - Criar automações diárias de e-mail.
 
 ## 2. Descrição do Projeto
 
-- **Tema do Projeto**:  
-  Desenvolvimento de um Sistema de Gestão Hoteleira moderno que automatiza processos críticos, integrando reservas online, gestão financeira, dashboards e atendimento automatizado.
+- **Tema do Projeto**  
+  Plataforma de Gestão Hoteleira com filas de mensagens, automações, resiliência e chatbot WhatsApp.
 
-- **Problemas a Resolver**:  
-  - Controle manual de reservas e disponibilidade dos quartos.  
-  - Falta de centralização na gestão financeira e emissão de notas fiscais.  
-  - Comunicação ineficiente com os clientes.  
-  - Ausência de um processo automatizado que garanta qualidade e agilidade nas atualizações.
+- **Problemas a Resolver**  
+  1. Picos de tráfego de criação/consulta de reservas causando lentidão.  
+  2. Falhas em serviços externos (emissão de NF-e, gateway de pagamento) impactando a experiência.  
+  3. Consultas repetitivas ao banco gerando alta latência nos dashboards.  
+  4. Necessidade de automação no envio de NF-e e lembretes de diária.
 
-- **Limitações**:  
-  - O sistema não incluirá funcionalidades específicas para gerenciamento de restaurantes ou serviços de quarto nesta versão.  
-  - A integração com plataformas externas de reservas (ex.: OTAs) será considerada apenas em futuras atualizações.
+- **Limitações**  
+  - Integração com OTAs e serviços de quarto ficam para versões futuras.  
+  - Circuit Breaker cobre apenas serviços críticos de NF-e e pagamento.  
+  - Cache será atualizado por TTL ou invalidação programada.
 
 ## 3. Especificação Técnica
 
-Descrição detalhada da proposta, abordando os requisitos de software, processos, integrações e a implantação em diferentes ambientes.
+### 3.1 Requisitos de Software
 
-### 3.1. Requisitos de Software
+**Requisitos Funcionais (RF)**  
+1. Fila RabbitMQ para orquestração de criação/consulta de reservas.  
+2. Enfileirar e processar eventos de geração de NF-e.  
+3. Automação diária de envio de e-mail de NF-e para hóspedes.  
+4. Automação diária de lembrete de check-out por e-mail.  
+5. Limitação de taxa de chamadas críticas via Token Bucket.  
+6. Isolamento de falhas externas via Circuit Breaker.  
+7. Caching Distribuído para consultas de disponibilidade e projeções de dashboard.  
+8. Reservas online (web e WhatsApp via Baileys).  
+9. Cadastro de hóspedes e funcionários.  
+10. Emissão de NF-e integrada ao ERP fiscal.  
+11. Dashboards em tempo real com dados cacheados.  
+12. Área de gestão via painel (dono/gestor).
 
-- **Lista de Requisitos:**  
-  **Requisitos Funcionais (RF):**
-  1. Permitir reservas online realizadas pelos clientes, inclusive via WhatsApp.
-  2. Gerenciar o cadastro de hóspedes com informações pessoais e histórico de estadias.
-  3. Controlar a disponibilidade e o cadastro de quartos.
-  4. Processar pagamentos online e emitir notas fiscais.
-  5. Gerar relatórios financeiros e operacionais detalhados.
-  6. Integrar um chatbot para atendimento automatizado, permitindo consultas e envio de análises (diárias, semanais e mensais).
-  7. Enviar notificações em tempo real sobre alterações nas reservas e atualizações do sistema.
-  8. Disponibilizar dashboards analíticos em tempo real para a gestão do hotel.
-  9. Implementar um pipeline de CI/CD com testes automatizados (unitários, integração e regressão) e deploy automático.
+**Requisitos Não Funcionais (RNF)**  
+1. Back-end (.NET 7 em C#), front-end (Angular/Next.js).  
+2. Banco de dados MySQL ou SQL Server.  
+3. RabbitMQ como broker de mensagens.  
+4. Serviço de e-mail (SMTP ou SendGrid).  
+5. Redis para Token Bucket e Caching Distribuído.  
+6. Circuit Breaker implementado com Polly (ou biblioteca similar).  
+7. LGPD: criptografia AES-256 em repouso e TLS 1.2+ em trânsito.  
+8. CI/CD com rollback automático (GitHub Actions).  
+9. Escalabilidade via Docker/Kubernetes em AWS.
 
-  **Requisitos Não Funcionais (RNF):**
-  1. Utilizar .NET para o desenvolvimento do back-end.
-  2. Desenvolver o front-end com Angular ou Next.js, assegurando responsividade.
-  3. Empregar MySQL ou SQL Server para o gerenciamento dos dados.
-  4. Assegurar a segurança dos dados, seguindo as normas da LGPD, com criptografia e controle de acesso.
-  5. Suportar múltiplos usuários simultâneos mantendo desempenho adequado.
-  6. Otimizar o tempo de build e deploy com rollback imediato em caso de falhas.
+### 3.2 Considerações de Design
 
-- **Representação dos Requisitos:**  
-  [![UML](https://mermaid.ink/img/pako:eNplVM1u00AQfpXVSpVSKWljJ7hJbpZdUg4JbZSqEoTDxDtNFmyvtbsu_VEfggtXLhWcOCKOHPomPAGPwDixnRh8iPPNfN_MePazH3ikBPIRv47Vx2gN2rJ5uEgZXQcHzLdKo2EtjRndMbUglGGRShgm6r1kGWhgRiZ5DJotVYqRModbte-8_fPl0xMLYkk6fFdG3W3UF4lMpbGaCuoq16Pc02cWrMEula2i_ULxk4V48zozFKyHC8DQMALZpVGsVQxlnr8nSxWr7VwyFTKiucAweP72_AOr0WaXrQX__fUXmyHE8p4oM3o4fQOsdYXL4yvqb_wsO1zwUhCEpSBQqcljS4pQmkylciljKUBgTZ2d_1v7HFaQ0ApUzfH9kuNbpBk3SebnViVgSSJ2zO3v-Kzkj1FjGkkqeqZMhgJNzRxf_Me5yOk01Y5yOi0pp4m0UrOpssBeShNBvCsz25XZ7CUGsoDcqzKpdjGhx6dcsQsw66UCLWrStG6V3hSjUCt5TYcRqb2Ry6nmJXWOxpLX9vdAzgteHQfh7iTCanUhZrG6q9mRalB3HiFP3hZHz2jJGhmVhK2nkRnMycuViXKjKuOyTqdDJmnAIGxmzxvQ96uevrsJjM-a8KIBT6fN7KwBJ2EDTpvkvVa9OrAHC3r15mybzRswJDpv85WWgo-szrHNE9QJFJA_FNQFt2tMyNIj-itAf1jwRfpImgzSN0ollUyrfLXmo2uIDaE8E2AxlLDSkNRR8qJAHag8tXw0HHY3Rfjogd_yUWfgDI88z_HcgTNwnUHXa_M7YnlHruP0nW7PG3Zf9IbuY5vfb9q6Rz3P8_okO3FO-t0Tt9fmKAoTTrbfsM2n7PEvNyuDAg?type=png)](https://mermaid.live/edit#pako:eNplVM1u00AQfpXVSpVSKWljJ7hJbpZdUg4JbZSqEoTDxDtNFmyvtbsu_VEfggtXLhWcOCKOHPomPAGPwDixnRh8iPPNfN_MePazH3ikBPIRv47Vx2gN2rJ5uEgZXQcHzLdKo2EtjRndMbUglGGRShgm6r1kGWhgRiZ5DJotVYqRModbte-8_fPl0xMLYkk6fFdG3W3UF4lMpbGaCuoq16Pc02cWrMEula2i_ULxk4V48zozFKyHC8DQMALZpVGsVQxlnr8nSxWr7VwyFTKiucAweP72_AOr0WaXrQX__fUXmyHE8p4oM3o4fQOsdYXL4yvqb_wsO1zwUhCEpSBQqcljS4pQmkylciljKUBgTZ2d_1v7HFaQ0ApUzfH9kuNbpBk3SebnViVgSSJ2zO3v-Kzkj1FjGkkqeqZMhgJNzRxf_Me5yOk01Y5yOi0pp4m0UrOpssBeShNBvCsz25XZ7CUGsoDcqzKpdjGhx6dcsQsw66UCLWrStG6V3hSjUCt5TYcRqb2Ry6nmJXWOxpLX9vdAzgteHQfh7iTCanUhZrG6q9mRalB3HiFP3hZHz2jJGhmVhK2nkRnMycuViXKjKuOyTqdDJmnAIGxmzxvQ96uevrsJjM-a8KIBT6fN7KwBJ2EDTpvkvVa9OrAHC3r15mybzRswJDpv85WWgo-szrHNE9QJFJA_FNQFt2tMyNIj-itAf1jwRfpImgzSN0ollUyrfLXmo2uIDaE8E2AxlLDSkNRR8qJAHag8tXw0HHY3Rfjogd_yUWfgDI88z_HcgTNwnUHXa_M7YnlHruP0nW7PG3Zf9IbuY5vfb9q6Rz3P8_okO3FO-t0Tt9fmKAoTTrbfsM2n7PEvNyuDAg)
+- **Mensageria (RabbitMQ)**  
+  - Produtor (API de reservas/NF-e) publica mensagens em filas `reservas` e `notificações`.  
+  - Consumer workers processam filas para persistência e envio de e-mail.
 
-### 3.2. Considerações de Design
+- **Rate Limiting (Token Bucket)**  
+  - Middleware .NET insere tokens num bucket por intervalo, bloqueando requisições sem token.
 
-- **Discussão sobre as Escolhas de Design:**  
-  Foram avaliadas diversas alternativas para garantir escalabilidade, modularidade e facilidade de manutenção. A solução adotada privilegia a separação clara entre as camadas de apresentação, aplicação e dados, facilitando a integração contínua e futuras expansões.
+- **Circuit Breaker**  
+  - Middleware que monitora falhas em chamadas a serviços externos (NF-e, pagamento).  
+  - Após número de erros configurado, dispara “open state” e aplica fallback ou mensagem amigável ao usuário.  
+  - Biblioteca sugerida: Polly.
 
-- **Visão Inicial da Arquitetura:**  
-  - **Camada de Apresentação:** Desenvolvida com Angular ou Next.js, garantindo uma interface responsiva.  
-  - **Camada de Aplicação:** Lógica de negócio implementada em .NET com comunicação via APIs RESTful.  
-  - **Camada de Dados:** Gerenciamento dos dados utilizando MySQL ou SQL Server.  
-  - **Camada de Integração (CI/CD):** Pipeline automatizado para build, testes, deploy e monitoramento contínuo.
+- **Caching Distribuído**  
+  - Redis para cache de disponibilidade de quartos, projeções de dashboard e respostas frequentes do chatbot.  
+  - TTL configurável por entidade e invalidação via eventos (ex.: nova reserva).
 
-- **Padrões de Arquitetura:**  
-  O projeto adota o padrão MVC para o back-end e práticas de Microserviços, quando aplicável, facilitando a manutenção e escalabilidade.
+- **Automação Diária**  
+  - Hangfire (ou cronexpression) agenda jobs que:  
+    1. Verificam NF-e geradas, enviam e-mail ao hóspede.  
+    2. Verificam check-outs do dia, disparam lembrete por e-mail.
 
-- **Modelos C4:**  
-  A arquitetura será detalhada em quatro níveis:  
-  - **Contexto:** Visão geral do sistema e seus usuários.  
-  - **Contêineres:** Separação entre interface, lógica de negócio e armazenamento de dados.  
-  - **Componentes:** Divisão interna dos contêineres em módulos funcionais.  
-  - **Código:** Estrutura detalhada para implementação e manutenção do código.
+- **C4 Views**  
+  - **Contexto:** Usuários (hóspedes, funcionários, gestor) e sistemas externos (ERP fiscal).  
+  - **Contêineres:** API Gateway, Serviços de Reserva, Faturamento, Notificações, Chatbot; Redis; RabbitMQ; Banco de Dados.  
+  - **Componentes:** Módulos de mensageria, throttle, circuito, cache, jobs agendados.  
+  - **Código:** Organização em camadas (API, Serviços, Repositório, Workers).
 
-### 3.3. Stack Tecnológica
+### 3.3 Stack Tecnológica
 
-- **Linguagens de Programação:**  
-  - Back-end: C# com .NET  
-  - Front-end: TypeScript/JavaScript com Angular ou Next.js
+- **Back-end:**  
+  - .NET 7 (C#)  
+  - RabbitMQ  
+  - Polly (Circuit Breaker)  
+  - Hangfire ou cronexpression  
+  - Redis (Token Bucket + Cache)  
 
-- **Frameworks e Bibliotecas:**  
-  - .NET para desenvolvimento do servidor  
-  - Angular ou Next.js para a interface do usuário  
-  - Bibliotecas para integração de APIs RESTful e autenticação
+- **Front-end:**  
+  - Angular 14 ou Next.js  
+  - Vercel (deploy)  
 
-- **Ferramentas de Desenvolvimento e Gestão de Projeto:**  
-  - Versionamento: Git  
-  - Gestão de projetos: Trello, Jira ou ferramenta similar  
-  - Pipeline de CI/CD: GitHub Actions, GitLab CI ou Jenkins
+- **Chatbot:**  
+  - Node.js + NestJS + Baileys  
 
-- **Infraestrutura e Implantação:**  
-  - **AWS:**  
-    - O back-end e o banco de dados serão deployados em instâncias AWS, garantindo escalabilidade, segurança e alta disponibilidade.  
-  - **Vercel:**  
-    - O front-end e o chatbot serão deployados na Vercel, aproveitando sua capacidade de oferecer deploys rápidos e gerenciamento simplificado de aplicações front-end.
+- **Banco de Dados:**  
+  - MySQL ou SQL Server (RDS na AWS)  
 
-### 3.4. Considerações de Segurança
+- **Infraestrutura:**  
+  - AWS (ECS/EKS, RDS, S3)  
+  - GitHub Actions para CI/CD  
 
-- **Medidas de Segurança:**  
-  - Criptografia de dados sensíveis (tanto em trânsito quanto em repouso).  
-  - Implementação de autenticação e autorização robusta.  
-  - Validação de entradas para mitigar riscos de SQL Injection e Cross-Site Scripting (XSS).  
-  - Adoção de práticas conformes à LGPD para garantir a privacidade dos dados dos usuários.
+- **E-mail:**  
+  - SendGrid ou SMTP empresarial  
+
+### 3.4 Considerações de Segurança
+
+- **Rate Limiting & Resiliência:** Token Bucket e Circuit Breaker protegem a API de overload e falhas externas.  
+- **Mensageria Segura:** SSL/TLS em RabbitMQ e Redis.  
+- **Proteção de Dados:** LGPD, criptografia AES-256 em repouso e TLS 1.2+ em trânsito.  
+- **Validação Rigorosa:** Sanitização de inputs e tratamento centralizado de exceções.
 
 ## 4. Próximos Passos
 
-Após a finalização deste documento, os próximos passos incluem:
-- Refinamento dos requisitos e ajustes na arquitetura com base em feedback de revisões.
-- Início do desenvolvimento e configuração do ambiente de CI/CD, iniciando pela definição do pipeline e execução dos testes automatizados.
-- Configuração das instâncias AWS para o back-end e banco de dados, e preparação do deploy do front-end e chatbot na Vercel.
-- Planejamento detalhado das fases de desenvolvimento para Portfólio I e Portfólio II, com acompanhamento contínuo dos processos de build e deploy.
+1. Provisionar **Redis** e **RabbitMQ** em ambiente de dev.  
+2. Implementar middleware de **Token Bucket** e **Circuit Breaker** na API.  
+3. Criar workers para processamento de filas e jobs agendados (Hangfire).  
+4. Configurar **caching** de consultas críticas no Redis.  
+5. Ajustar pipeline CI/CD para testes de resiliência (caixas d’água) e performance de cache.  
+6. Realizar testes de carga simulando falhas externas e picos de reservas.  
+7. Documentar diagramas C4 e sequência de fallback do Circuit Breaker.
 
 ## 5. Referências
 
-- Documentação oficial do .NET  
-- Documentação do Angular / Next.js  
-- Guias e tutoriais sobre CI/CD (GitHub Actions, GitLab CI, Jenkins)  
-- Documentação da AWS (Amazon Web Services)  
-- Documentação da Vercel  
-- Normas e diretrizes da LGPD para proteção de dados
+- RabbitMQ Documentation  
+- Polly Circuit Breaker Patterns  
+- Redis Caching Strategies  
+- Baileys WhatsApp Web API Guide  
+- LGPD: Lei Geral de Proteção de Dados  
 
 ## 6. Apêndices (Opcionais)
 
-- Diagramas UML ilustrando os Casos de Uso e a arquitetura do sistema.  
-- Especificações técnicas detalhadas dos módulos e integrações.  
-- Logs e métricas dos testes automatizados (quando disponíveis).
+- Diagrama UML de sequência para fluxo de reservas em RabbitMQ e fallback de Circuit Breaker.  
+- Exemplo de C4 Container Diagram detalhado.
 
 ## 7. Avaliações de Professores
 
-- Considerações Professor/a:  
-- Considerações Professor/a:  
-- Considerações Professor/a:
+- **Considerações Professor/a:**  
+- **Considerações Professor/a:**  
+- **Considerações Professor/a:**  
