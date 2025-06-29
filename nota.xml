@@ -1,0 +1,64 @@
+<nfse id="nota">
+  <!-- Dados da NFS-e -->
+  <nf>
+    <serie_nfse>1</serie_nfse>
+    <data_fato_gerador>20/06/2025</data_fato_gerador>
+    <valor_total>750,00</valor_total>
+    <valor_desconto>0,00</valor_desconto>
+    <valor_ir>0,00</valor_ir>
+    <valor_inss>0,00</valor_inss>
+    <valor_contribuicao_social>0,00</valor_contribuicao_social>
+    <valor_rps>0,00</valor_rps>
+    <valor_pis>0,00</valor_pis>
+    <valor_cofins>0,00</valor_cofins>
+    <observacao>Reservas</observacao>
+  </nf>
+
+  <!-- Dados do prestador (seu hotel) -->
+  <prestador>
+    <cpfcnpj>83630657000160</cpfcnpj>
+    <cidade>8319</cidade>
+  </prestador>
+
+  <!-- Dados do tomador (hóspede) -->
+  <tomador>
+    <endereco_informado>1</endereco_informado>
+    <tipo>J</tipo>
+    <cpfcnpj>09313141021721</cpfcnpj>
+    <nome_razao_social>DB S.A</nome_razao_social>
+    <sobrenome_nome_fantasia>DB S.A</sobrenome_nome_fantasia>
+    <logradouro>Av. Leoberto Leal</logradouro>
+    <numero_residencia>1460</numero_residencia>
+    <bairro>Universitário</bairro>
+    <cidade>9153</cidade>
+    <cep>89520000</cep>
+  </tomador>
+
+  <!-- Itens da NFS-e -->
+  <itens>
+    <lista>
+      <tributa_municipio_prestador>N</tributa_municipio_prestador>
+      <codigo_local_prestacao_servico>8319</codigo_local_prestacao_servico>
+      <unidade_codigo>1</unidade_codigo>
+      <unidade_quantidade>1</unidade_quantidade>
+      <unidade_valor_unitario>750,00</unidade_valor_unitario>
+      <codigo_item_lista_servico>901</codigo_item_lista_servico>
+      <descritivo>Diárias</descritivo>
+      <aliquota_item_lista_servico>2,0100</aliquota_item_lista_servico>
+      <situacao_tributaria>0</situacao_tributaria>
+      <valor_tributavel>750,00</valor_tributavel>
+    </lista>
+  </itens>
+
+  <!-- Forma de pagamento e parcelas -->
+  <!-- <forma_pagamento>
+    <tipo_pagamento>1</tipo_pagamento> 
+    <parcelas>
+      <parcela>
+        <numero>1</numero>
+        <valor>500,00</valor>
+        <data_vencimento>18/06/2025</data_vencimento>
+      </parcela>
+    </parcelas>
+  </forma_pagamento> -->
+</nfse>

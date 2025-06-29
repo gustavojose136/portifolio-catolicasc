@@ -1,0 +1,15 @@
+<nfse id="nota">
+  <!-- Dados da nota a cancelar -->
+  <nf>
+    <numero>123</numero>
+    <serie_nfse>1</serie_nfse>
+    <situacao>C</situacao>             <!-- “C” para Cancelamento -->
+    <observacao>Cancelamento de teste</observacao>
+  </nf>
+
+  <!-- Dados do prestador -->
+  <prestador>
+    <cpfcnpj>12345678000195</cpfcnpj>
+    <cidade>4215807</cidade>
+  </prestador>
+</nfse>

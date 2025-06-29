@@ -1,0 +1,23 @@
+sequenceDiagram
+    participant Hóspede
+    participant ChatbotSvc
+    participant API
+    participant ResSvc
+    participant MQ as RabbitMQ
+    participant Notif as NotificationSvc
+    Hóspede->>ChatbotSvc: “Reservar 01–03/07”
+    ChatbotSvc->>API: POST /reservations
+    API->>ResSvc: CreateBookingCommand
+    ResSvc->>Redis: TokenBucket.TryConsume()
+    alt token disponível
+      ResSvc->>MySQL: INSERT Booking
+      ResSvc->>MQ: Publish BookingCreated
+      ResSvc-->>API: 201 Created
+    else sem token
+      ResSvc-->>API: 429 Too Many Requests
+    end
+    API-->>ChatbotSvc: 201 Created
+    MQ->>Notif: BookingCreated
+    Notif->>EmailSvc: Send confirmation
+    Notif-->>MQ: Ack
+    ChatbotSvc-->>Hóspede: “Reserva confirmada!”  
