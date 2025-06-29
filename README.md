@@ -198,6 +198,7 @@ C4Container
 
 ### 3.7.3. Diagrama de Componentes (C4 Nível 3) – Reservation Service
 
+```mermaid
 C4Component
     title Reservation Service – Componentes Internos
 
@@ -217,6 +218,7 @@ C4Component
     Rel(infra, rabbit, "Publica eventos (`BookingCreated`, `InvoiceCreated`)")
     Rel(infra, redis, "Consulta e atualiza cache / token bucket")
 
+```
 
 ### 3.1. Resumo
 
