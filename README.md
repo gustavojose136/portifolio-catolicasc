@@ -102,23 +102,42 @@ O **RabbitSuites** é uma plataforma multi‐serviço orientada a eventos, const
 
 ### 3.3. Requisitos de Software
 
-- **Requisitos Funcionais (RF)**
+### Módulo de Reserva
+- **RF-RES-001**: Criar uma nova reserva via API REST/WhatsApp (Baileys).  
+- **RF-RES-002**: Consultar disponibilidade de quartos em tempo real.  
+- **RF-RES-003**: Listar reservas existentes por hóspede, data ou status.  
+- **RF-RES-004**: Atualizar/cancelar reserva, com publicação de evento `BookingCancelled` em RabbitMQ.  
 
-  1. Orquestrar criação/consulta de reservas via RabbitMQ.
-  2. Gerar e-mails de NF-e e lembrete de check-out automaticamente.
-  3. Limitar taxa de requisições críticas (Token Bucket).
-  4. Isolar falhas em integrações externas (Circuit Breaker).
-  5. Cache Redis para aceleramento de dashboards.
-  6. Chatbot WhatsApp (Baileys) para reservas e alertas.
-  7. Área administrativa para gestão de quartos, reservas e relatórios.
+### Módulo de Quarto
+- **RF-ROOM-001**: Cadastrar e editar informações de quartos (número, tipo, tarifa).  
+- **RF-ROOM-002**: Marcar quarto como “manutenção” ou “indisponível”.  
+- **RF-ROOM-003**: Consultar status de ocupação e histórico de ocupações.  
+- **RF-ROOM-004**: Receber e processar eventos de reserva para atualizar cache Redis.  
 
-- **Requisitos Não-Funcionais (RNF)**
-  - .NET e Node.js (NestJS) para serviços.
-  - MySQL ou SQL Server (RDS na AWS).
-  - RabbitMQ como broker AMQP.
-  - Redis para cache distribuído e throttling.
-  - Deploy em Docker/Kubernetes com CI/CD (GitHub Actions).
-  - Conformidade LGPD, TLS 1.2+, criptografia AES-256.
+### Módulo de Faturamento (Billing)
+- **RF-BIL-001**: Gerar Nota Fiscal Eletrônica (NF-e) a partir de reserva confirmada.  
+- **RF-BIL-002**: Publicar evento `InvoiceCreated` em RabbitMQ após emissão de NF-e.  
+- **RF-BIL-003**: Integrar via SOAP/REST com ERP fiscal para validação e protocolo de NF-e.  
+- **RF-BIL-004**: Permitir consulta de XML/PDF da NF-e pelo painel administrativo.  
+
+### Módulo de Notificações
+- **RF-NOT-001**: Consumir eventos `BookingCreated` e enviar e-mail de confirmação.  
+- **RF-NOT-002**: Consumir eventos `InvoiceCreated` e enviar e-mail com NF-e ao hóspede.  
+- **RF-NOT-003**: Agendar lembretes diários de check-out para hóspedes.  
+- **RF-NOT-004**: Expor endpoint para reenvio manual de notificações, se necessário.  
+
+### Módulo de Chatbot (WhatsApp)
+- **RF-CBT-001**: Receber e interpretar comandos de reserva via WhatsApp (Baileys).  
+- **RF-CBT-002**: Informar ao hóspede o status da reserva (confirmada, pendente, cancelada).  
+- **RF-CBT-003**: Enviar alertas e lembretes via WhatsApp (check-in, check-out, NF-e).  
+- **RF-CBT-004**: Publicar comandos/eventos em RabbitMQ para outros serviços consumirem.  
+
+### Módulo Administrativo (Painel)
+- **RF-ADM-001**: Tela de login/autenticação com roles (funcionário, gestor).  
+- **RF-ADM-002**: Dashboard de KPIs (ocupação, receita, reservas por período).  
+- **RF-ADM-003**: CRUD completo de hóspedes, funcionários e configurações de hotel.  
+- **RF-ADM-004**: Filtros avançados (data, status, tipo de quarto) em listas de reservas e faturas.  
+
 
 ### 3.4. Considerações de Design
 
