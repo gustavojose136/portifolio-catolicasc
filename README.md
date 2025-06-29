@@ -198,20 +198,25 @@ C4Container
 
 ### 3.7.3. Diagrama de Componentes (C4 Nível 3) – Reservation Service
 
-```mermaid
 C4Component
     title Reservation Service – Componentes Internos
-    Container(reservationSvc, "Reservation Service", ".NET", "")
+
+    Container(reservationSvc, "Reservation Service", ".NET 7", "Gerencia reservas e publica eventos")
+
     Component(domain, "Domain Layer", "", "Entidades, ValueObjects, DomainServices, Eventos")
     Component(app, "Application Layer", "", "UseCases, Commands/Queries, DTOs, Interfaces")
     Component(infra, "Infrastructure Layer", "", "EF Core, RabbitMQ Publishers, Redis Client, TokenBucket")
-    Component(api, "API Layer", "", "Controllers, Middlewares (CB, TB), DI")
+    Component(api, "API Layer", "", "Controllers, Middlewares (Circuit Breaker, Token Bucket), DI")
+
+    ContainerDb(rabbit, "RabbitMQ", "AMQP Broker", "Filas de reservas, faturamento e notificações")
+    ContainerDb(redis, "Redis", "Cache Distribuído & Token Bucket", "Cache de dados quentes e throttling distribuído")
+
     Rel(api, app, "Invoca UseCases")
     Rel(app, domain, "Aplica regras de negócio")
     Rel(app, infra, "Chama repositórios e publica eventos")
-    Rel(infra, rabbit, "RabbitMQ Publisher")
-    Rel(infra, redis, "TokenBucket + Cache")
-```
+    Rel(infra, rabbit, "Publica eventos (`BookingCreated`, `InvoiceCreated`)")
+    Rel(infra, redis, "Consulta e atualiza cache / token bucket")
+
 
 ### 3.1. Resumo
 
