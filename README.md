@@ -169,24 +169,33 @@ O **RabbitSuites** é uma plataforma multi‐serviço orientada a eventos, const
 ```mermaid
 C4Context
     title RabbitSuites – Visão de Contexto
-    Person(hospede, "Hóspede", "Realiza reservas e recebe confirmações")
-    Person(funcionario, "Funcionário", "Gerencia quartos e reservas")
-    Person(gestor, "Gestor/Dono", "Visualiza dashboards e relatórios")
-    System_Boundary(rs, "RabbitSuites") {
-      System(chatbot, "Chatbot WhatsApp", "NestJS + Baileys para atendimento e reservas")
-      System(webApp, "Web App", "Angular/Next.js para funcionários e gestores")
-      System(backend, "API Gateway + Microservices (.NET)", "Orquestra lógica e eventos")
-      System(fiscal, "ERP Fiscal Externo", "Emissão de NF-e")
-      System(emailSvc, "Serviço de E-mail", "Envio de NF-e e lembretes")
+
+    %% Pessoas (Atores Externos)
+    Person(hospede, "🧍 Hóspede", "Realiza reservas e recebe confirmações")
+    Person(funcionario, "👩‍💼 Funcionário", "Gerencia quartos e reservas")
+    Person(gestor, "📊 Gestor/Dono", "Visualiza dashboards e relatórios")
+
+    %% Sistema Principal com Fronteira
+    System_Boundary(rs, "🐰 RabbitSuites") {
+        System(chatbot, "🤖 Chatbot WhatsApp", "NestJS + Baileys – Atendimento e reservas")
+        System(webApp, "🖥️ Web App", "Angular/Next.js – Interface para equipe e gestão")
+        System(backend, "🧠 Backend/API Gateway", ".NET – Orquestra lógica, microserviços e eventos")
+        System(fiscal, "📄 ERP Fiscal Externo", "Integração para emissão de NF-e")
+        System(emailSvc, "✉️ Serviço de E-mail", "Envia NF-e e lembretes por SMTP ou API")
     }
+
+    %% Interações com Usuários
     Rel(hospede, chatbot, "Reserva / Consulta via WhatsApp")
-    Rel(hospede, webApp, "Reserva via web")
-    Rel(funcionario, webApp, "CRUD quartos, reservas, emissão de NF-e")
-    Rel(gestor, webApp, "Visualiza dashboards")
+    Rel(hospede, webApp, "Reserva via Web")
+    Rel(funcionario, webApp, "Gerencia quartos, reservas e NF-e")
+    Rel(gestor, webApp, "Acessa dashboards e relatórios")
+
+    %% Interações internas do sistema
     Rel(chatbot, backend, "REST / AMQP")
     Rel(webApp, backend, "REST API")
-    Rel(backend, fiscal, "SOAP/REST NF-e")
-    Rel(backend, emailSvc, "SMTP/SendGrid")
+    Rel(backend, fiscal, "Integração NF-e (SOAP/REST)")
+    Rel(backend, emailSvc, "Envio de e-mails (SMTP/SendGrid)")
+
 ```
 
 ### 3.7.2. Diagrama de Contêineres (C4 Nível 2)
@@ -194,25 +203,24 @@ C4Context
 ```mermaid
 C4Container
     title RabbitSuites – Containers
-    Container(apiGateway, "API Gateway", "Ocelot/Kong/AWS", "Roteia chamadas REST/WS")
-    Container(reservationSvc, "Reservation Service", ".NET", "Gerencia reservas; publica BookingCreated")
-    Container(roomSvc, "Room Service", ".NET", "Gerencia quartos; cache Redis")
-    Container(billingSvc, "Billing Service", ".NET", "Gera NF-e; integra ERP")
-    Container(notificationSvc, "Notification Worker", ".NET + Hangfire", "Processa filas e envia e-mail")
-    Container(chatbotSvc, "Chatbot Service", "NestJS + Baileys", "Atende WhatsApp; usa RabbitMQ e Redis")
-    ContainerDb(mysql, "MySQL/SQL Server", "RDS AWS", "Dados relacionais")
-    ContainerDb(rabbit, "RabbitMQ", "AMQP Broker", "Filas de reservas, faturamento e notificações")
-    ContainerDb(redis, "Redis", "Cache & TokenBucket", "Cache distribuído e throttling")
-    Rel(apiGateway, reservationSvc, "REST")
-    Rel(apiGateway, roomSvc, "REST")
-    Rel(apiGateway, billingSvc, "REST")
-    Rel(apiGateway, notificationSvc, "REST (jobs)")
-    Rel(apiGateway, chatbotSvc, "WebSocket")
-    Rel(reservationSvc, rabbit, "publica BookingCreated")
-    Rel(billingSvc, rabbit, "publica InvoiceCreated")
-    Rel(notificationSvc, rabbit, "consome e envia e-mail")
-    Rel(chatbotSvc, rabbit, "pub/consome eventos")
-    Rel(roomSvc, redis, "cache aside")
+
+    Container_Boundary(api_boundary, "Camada de API") {
+        Container(apiGateway, "API Gateway", "Ocelot/Kong/AWS", "Roteia chamadas REST/WS")
+    }
+
+    Container_Boundary(svc_boundary, "Serviços de Negócio") {
+        Container(reservationSvc, "Reservation Service", ".NET", "Gerencia reservas; publica BookingCreated")
+        Container(roomSvc, "Room Service", ".NET", "Gerencia quartos; cache Redis")
+        Container(billingSvc, "Billing Service", ".NET", "Gera NF-e; integra ERP")
+        Container(notificationSvc, "Notification Worker", ".NET + Hangfire", "Processa filas e envia e-mail")
+        Container(chatbotSvc, "Chatbot Service", "NestJS + Baileys", "Atende WhatsApp; usa RabbitMQ e Redis")
+    }
+
+    Container_Boundary(db_boundary, "Infraestrutura") {
+        ContainerDb(mysql, "MySQL/SQL Server", "RDS AWS", "Dados relacionais")
+        ContainerDb(rabbit, "RabbitMQ", "AMQP Broker", "Filas de reservas, faturamento e notificações")
+        ContainerDb(redis, "Redis", "Cache & TokenBucket", "Cache distribuído e throttling")
+    }
 ```
 
 ### 3.7.3. Diagrama de Componentes (C4 Nível 3) – Reservation Service
@@ -221,21 +229,28 @@ C4Container
 C4Component
     title Reservation Service – Componentes Internos
 
-    Container(reservationSvc, "Reservation Service", ".NET 7", "Gerencia reservas e publica eventos")
+    %% Serviço principal como contêiner raiz
+    Container(reservationSvc, "🎯 Reservation Service", ".NET 7", "Gerencia reservas e publica eventos")
 
-    Component(domain, "Domain Layer", "", "Entidades, ValueObjects, DomainServices, Eventos")
-    Component(app, "Application Layer", "", "UseCases, Commands/Queries, DTOs, Interfaces")
-    Component(infra, "Infrastructure Layer", "", "EF Core, RabbitMQ Publishers, Redis Client, TokenBucket")
-    Component(api, "API Layer", "", "Controllers, Middlewares (Circuit Breaker, Token Bucket), DI")
+    %% Camadas internas do serviço
+    Component(domain, "🧬 Domain Layer", "", "Entidades, ValueObjects, DomainServices, DomainEvents")
+    Component(app, "📦 Application Layer", "", "UseCases, Commands/Queries, DTOs, Interfaces")
+    Component(infra, "🛠️ Infrastructure Layer", "", "EF Core, RabbitMQ, Redis, TokenBucket")
+    Component(api, "🌐 API Layer", "", "Controllers, Middlewares (Circuit Breaker, Token Bucket), DI")
 
-    ContainerDb(rabbit, "RabbitMQ", "AMQP Broker", "Filas de reservas, faturamento e notificações")
-    ContainerDb(redis, "Redis", "Cache Distribuído & Token Bucket", "Cache de dados quentes e throttling distribuído")
+    %% Recursos externos
+    ContainerDb(rabbit, "📨 RabbitMQ", "AMQP Broker", "Filas: reservas, faturamento, notificações")
+    ContainerDb(redis, "⚡ Redis", "Cache Distribuído + TokenBucket", "Cache de dados quentes e throttling")
 
+    %% Relacionamentos internos
     Rel(api, app, "Invoca UseCases")
     Rel(app, domain, "Aplica regras de negócio")
-    Rel(app, infra, "Chama repositórios e publica eventos")
-    Rel(infra, rabbit, "Publica eventos (`BookingCreated`, `InvoiceCreated`)")
-    Rel(infra, redis, "Consulta e atualiza cache / token bucket")
+    Rel(app, infra, "Usa infraestrutura (DB, fila, cache)")
+
+    %% Interações com recursos externos
+    Rel(infra, rabbit, "📤 Publica eventos: BookingCreated, InvoiceCreated")
+    Rel(infra, redis, "📥 Consulta/atualiza cache e token bucket")
+
 
 ```
 
