@@ -178,7 +178,7 @@ C4Context
     %% Sistema Principal com Fronteira
     System_Boundary(rs, "🐰 RabbitSuites") {
         System(chatbot, "🤖 Chatbot WhatsApp", "NestJS + Baileys – Atendimento e reservas")
-        System(webApp, "🖥️ Web App", "Angular/Next.js – Interface para equipe e gestão")
+        System(webApp, "🖥️ Web App", "Next.js – Interface para equipe e gestão")
         System(backend, "🧠 Backend/API Gateway", ".NET – Orquestra lógica, microserviços e eventos")
         System(fiscal, "📄 ERP Fiscal Externo", "Integração para emissão de NF-e")
         System(emailSvc, "✉️ Serviço de E-mail", "Envia NF-e e lembretes por SMTP ou API")
