@@ -241,13 +241,6 @@ C4Component
 
 ## 4. Próximos Passos
 
-1. Provisionar **Redis** e **RabbitMQ** em ambiente de dev.
-2. Implementar middleware de **Token Bucket** e **Circuit Breaker** na API.
-3. Criar workers para processamento de filas e jobs agendados (Hangfire).
-4. Configurar **caching** de consultas críticas no Redis.
-5. Ajustar pipeline CI/CD para testes de resiliência (caixas d’água) e performance de cache.
-6. Realizar testes de carga simulando falhas externas e picos de reservas.
-7. Documentar diagramas C4 e sequência de fallback do Circuit Breaker.
 
 ## 5. Referências
 
@@ -255,14 +248,9 @@ C4Component
 - Polly Circuit Breaker Patterns
 - Redis Caching Strategies
 - Baileys WhatsApp Web API Guide
-- LGPD: Lei Geral de Proteção de Dados
+- LGPD: Lei Geral de Proteção de 
 
-## 6. Apêndices (Opcionais)
-
-- Diagrama UML de sequência para fluxo de reservas em RabbitMQ e fallback de Circuit Breaker.
-- Exemplo de C4 Container Diagram detalhado.
-
-## 7. Avaliações de Professores
+## 6. Avaliações de Professores
 
 - **Considerações Professor/a:**
 - **Considerações Professor/a:**
