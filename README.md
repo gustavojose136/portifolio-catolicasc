@@ -1,6 +1,6 @@
 # Capa
 
-- **Título do Projeto**: RabbitSuites – Gestão de Quartos, Reservas e Emissão de NF-e com Chatbot WhatsApp
+- **Título do Projeto**: AvenSuites – Gestão de Quartos, Reservas e Emissão de NF-e com Chatbot WhatsApp
 - **Nome do Estudante**: Gustavo José Rosa
 - **Curso**: Engenharia de Software
 - **Data de Entrega**: [Data]
@@ -9,7 +9,7 @@
 
 Gerenciar quartos, reservas, faturamento e atendimento em canais distintos é um processo fragmentado e sujeito a erros. Equipes hoteleiras perdem tempo sincronizando sistemas, emitindo NF-e manualmente e enviando lembretes, enquanto a satisfação do hóspede cai devido a confirmações tardias e falta de informações centralizadas.
 
-**RabbitSuites** surge para acabar com esse gargalo. Nossa plataforma unificada oferece:
+**AvenSuites** surge para acabar com esse gargalo. Nossa plataforma unificada oferece:
 
 - **Reservas 24/7** via web e WhatsApp (Baileys)
 - **Emissão automática de NF-e** com integração direta ao ERP fiscal
@@ -18,7 +18,7 @@ Gerenciar quartos, reservas, faturamento e atendimento em canais distintos é um
 - **Dashboards em tempo real** alimentados por cache Redis
 - **Deploy contínuo** (AWS/Vercel) com CI/CD e conformidade à LGPD
 
-Importante ressaltar: o RabbitSuites não é um CRM completo — nosso foco é otimizar a operação hoteleira, eliminando retrabalho e centralizando todo o fluxo de reservas e faturamento em um único painel.
+Importante ressaltar: o AvenSuites não é um CRM completo — nosso foco é otimizar a operação hoteleira, eliminando retrabalho e centralizando todo o fluxo de reservas e faturamento em um único painel.
 
 ---
 
@@ -26,7 +26,7 @@ Importante ressaltar: o RabbitSuites não é um CRM completo — nosso foco é o
 
 No mercado hoteleiro atual, velocidade e consistência são requisitos básicos para fidelizar hóspedes. Ainda assim, muitos estabelecimentos dependem de múltiplas planilhas, sistemas de reserva isolados e processos manuais de emissão fiscal — gerando retrabalho, erros contábeis e experiência fragmentada.
 
-O **RabbitSuites** foi desenhado para resolver esses pontos de dor. A plataforma centraliza em um só lugar:
+O **AvenSuites** foi desenhado para resolver esses pontos de dor. A plataforma centraliza em um só lugar:
 
 - Gestão de quartos e reservas com sincronização instantânea
 - Chatbot WhatsApp (Baileys) para interação ágil e notificações
@@ -35,11 +35,11 @@ O **RabbitSuites** foi desenhado para resolver esses pontos de dor. A plataforma
 - Resiliência garantida por Circuit Breaker em serviços externos
 - Aceleramento de consultas por meio de Caching Distribuído (Redis)
 
-Com RabbitSuites, você reduz custos operacionais, elimina integrações manuais e entrega uma experiência de ponta a ponta ao hóspede — do check-in ao pós-venda.
+Com AvenSuites, você reduz custos operacionais, elimina integrações manuais e entrega uma experiência de ponta a ponta ao hóspede — do check-in ao pós-venda.
 
 ## 2. Descrição do Projeto
 
-**RabbitSuites** é uma plataforma unificada, projetada para centralizar e automatizar todo o fluxo hoteleiro — da reserva à emissão de NF-e e pós-venda — em um único painel. Com integração via web e WhatsApp (Baileys), orquestração assíncrona (RabbitMQ), cache Redis e mecanismos de resiliência (Circuit Breaker e Token Bucket), entregamos uma solução robusta e escalável para hotéis que buscam alta disponibilidade e eficiência operacional.
+**AvenSuites** é uma plataforma unificada, projetada para centralizar e automatizar todo o fluxo hoteleiro — da reserva à emissão de NF-e e pós-venda — em um único painel. Com integração via web e WhatsApp (Baileys), orquestração assíncrona (RabbitMQ), cache Redis e mecanismos de resiliência (Circuit Breaker e Token Bucket), entregamos uma solução robusta e escalável para hotéis que buscam alta disponibilidade e eficiência operacional.
 
 O projeto nasceu para resolver problemas comuns e custosos no dia a dia hoteleiro:
 
@@ -48,20 +48,20 @@ O projeto nasceu para resolver problemas comuns e custosos no dia a dia hoteleir
 - **Picos de acesso** que sobrecarregam servidores e afetam a experiência do hóspede.
 - **Comunicação ineficiente**, sem lembretes automatizados ou notificações centralizadas.
 
-**RabbitSuites** elimina essas barreiras ao automatizar e orquestrar:
+**AvenSuites** elimina essas barreiras ao automatizar e orquestrar:
 
 - **Reservas e disponibilidade** em tempo real, sincronizadas via web e WhatsApp.
 - **Geração e envio de NF-e** diretamente para o ERP fiscal, com notificação instantânea ao hóspede.
 - **Notificações diárias** por e-mail (check-out, confirmação de pagamento, lembretes).
 - **Dashboards responsivos** alimentados por cache Redis, para monitoramento imediato.
 
-É importante notar: RabbitSuites não é um sistema de gestão completa de propriedades (PMS) nem um CRM. Nosso foco estratégico é otimizar reservas, faturamento e comunicação automatizada, reduzindo custos operacionais e permitindo que sua equipe se concentre na hospitalidade.
+É importante notar: AvenSuites não é um sistema de gestão completa de propriedades (PMS) nem um CRM. Nosso foco estratégico é otimizar reservas, faturamento e comunicação automatizada, reduzindo custos operacionais e permitindo que sua equipe se concentre na hospitalidade.
 
 # 3. Especificação Técnica
 
 ### 3.1. Resumo
 
-O **RabbitSuites** é uma plataforma multi‐serviço orientada a eventos, construída para orquestrar reservas, faturamento e notificações em hotéis. Cada microserviço segue DDD, expondo APIs REST/AMQP e publicando/consumindo eventos via RabbitMQ; o cache Redis e os mecanismos de resiliência (Token Bucket e Circuit Breaker) garantem performance e disponibilidade.
+O **AvenSuites** é uma plataforma multi‐serviço orientada a eventos, construída para orquestrar reservas, faturamento e notificações em hotéis. Cada microserviço segue DDD, expondo APIs REST/AMQP e publicando/consumindo eventos via RabbitMQ; o cache Redis e os mecanismos de resiliência (Token Bucket e Circuit Breaker) garantem performance e disponibilidade.
 
 ### 3.2. Componentes Principais do Sistema
 
@@ -168,7 +168,7 @@ O **RabbitSuites** é uma plataforma multi‐serviço orientada a eventos, const
 
 ```mermaid
 C4Context
-    title RabbitSuites – Visão de Contexto
+    title AvenSuites – Visão de Contexto
 
     %% Pessoas (Atores Externos)
     Person(hospede, "🧍 Hóspede", "Realiza reservas e recebe confirmações")
@@ -176,7 +176,7 @@ C4Context
     Person(gestor, "📊 Gestor/Dono", "Visualiza dashboards e relatórios")
 
     %% Sistema Principal com Fronteira
-    System_Boundary(rs, "🐰 RabbitSuites") {
+    System_Boundary(rs, "🐰 AvenSuites") {
         System(chatbot, "🤖 Chatbot WhatsApp", "NestJS + Baileys – Atendimento e reservas")
         System(webApp, "🖥️ Web App", "Next.js – Interface para equipe e gestão")
         System(backend, "🧠 Backend/API Gateway", ".NET – Orquestra lógica, microserviços e eventos")
@@ -202,7 +202,7 @@ C4Context
 
 ```mermaid
 C4Container
-    title RabbitSuites – Containers
+    title AvenSuites – Containers
 
     Container_Boundary(api_boundary, "Camada de API") {
         Container(apiGateway, "API Gateway", "Ocelot/Kong/AWS", "Roteia chamadas REST/WS")
