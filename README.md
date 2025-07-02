@@ -271,11 +271,20 @@ C4Component
 
 ## 5. Referências
 
-- RabbitMQ Documentation
-- Polly Circuit Breaker Patterns
-- Redis Caching Strategies
-- Baileys WhatsApp Web API Guide
-- LGPD: Lei Geral de Proteção de 
+- [The C4 Model for Software Architecture](https://c4model.com)  
+- [Next.js Documentation](https://nextjs.org/docs)  
+- [NestJS Documentation](https://docs.nestjs.com)  
+- [Baileys (WhatsApp Web API)](https://github.com/adiwajshing/Baileys)  
+- [.NET 7 Documentation](https://learn.microsoft.com/pt-br/dotnet/)  
+- [RabbitMQ Documentation](https://www.rabbitmq.com/documentation.html)  
+- [Redis Documentation](https://redis.io/documentation)  
+- [Polly (Circuit Breaker for .NET)](https://github.com/App-vNext/Polly)  
+- [Hangfire Documentation](https://docs.hangfire.io)  
+- [AWS Architecture Center](https://aws.amazon.com/architecture)  
+- [SendGrid API Reference](https://docs.sendgrid.com)  
+- [IPM Atende.Net – NFS-e API (São Francisco do Sul)](https://nfse-saofranciscodosul.atende.net/)  
+- [LGPD – Lei Geral de Proteção de Dados (Brasil)](https://www.planalto.gov.br/ccivil_03/_ato2015-2018/2018/lei/L13709.htm)  
+
 
 ## 6. Avaliações de Professores
 
