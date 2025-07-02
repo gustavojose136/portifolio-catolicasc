@@ -274,7 +274,7 @@ C4Component
 - [The C4 Model for Software Architecture](https://c4model.com)  
 - [Next.js Documentation](https://nextjs.org/docs)  
 - [NestJS Documentation](https://docs.nestjs.com)  
-- [Baileys (WhatsApp Web API)](https://github.com/adiwajshing/Baileys)  
+- [Baileys (WhatsApp Web API)](https://github.com/WhiskeySockets/Baileys)
 - [.NET 7 Documentation](https://learn.microsoft.com/pt-br/dotnet/)  
 - [RabbitMQ Documentation](https://www.rabbitmq.com/documentation.html)  
 - [Redis Documentation](https://redis.io/documentation)  
