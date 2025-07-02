@@ -201,43 +201,45 @@ C4Context
 C4Container
     title AvenSuites – Contêineres
 
-    Container_Boundary(web_boundary, "Front-end") {
-        Container(webApp, "Web App", "Next.js", "Interface para funcionários e gestores")
-    }
+    /* Front-end */
+    Container(webApp, "Web App", "Next.js", "Interface para funcionários e gestores")
 
-    Container_Boundary(chat_boundary, "Chatbot") {
-        Container(chatbotSvc, "Chatbot Service", "NestJS + Baileys", "Atende WhatsApp e publica eventos")
-    }
+    /* Chatbot */
+    Container(chatbotSvc, "Chatbot Service", "NestJS + Baileys", "Atende WhatsApp e publica eventos")
 
-    Container_Boundary(api_boundary, "Back-end") {
-        Container(apiGateway, "API Gateway", "Ocelot/Kong", "Roteia requisições REST/WS")
-        Container(reservationSvc, "Reservation Service", ".NET 7", "Gerencia reservas; publica eventos AMQP")
-        Container(roomSvc, "Room Service", ".NET 7", "Gerencia quartos; atualiza cache")
-        Container(billingSvc, "Billing Service", ".NET 7", "Gera NF-e; integra com NF-e API")
-        Container(notificationSvc, "Notification Worker", ".NET 7 + Hangfire", "Processa filas e envia e-mails")
-    }
+    /* Back-end */
+    Container(apiGateway, "API Gateway", "Ocelot/Kong", "Roteia requisições REST/WS e aplica rate limiting")
+    Container(reservationSvc, "Reservation Service", ".NET 7", "Gerencia reservas; publica eventos AMQP")
+    Container(roomSvc, "Room Service", ".NET 7", "Gerencia quartos; atualiza cache de disponibilidade")
+    Container(billingSvc, "Billing Service", ".NET 7", "Gera NF-e; integra com API municipal de NFS-e")
+    Container(notificationSvc, "Notification Worker", ".NET 7 + Hangfire", "Consome filas e envia e-mails")
 
-    Container_Boundary(infra_boundary, "Infraestrutura") {
-        ContainerDb(mysql, "MySQL/RDS", "MySQL", "Dados relacionais")
-        ContainerDb(rabbit, "RabbitMQ", "AMQP Broker", "Filas de eventos")
-        ContainerDb(redis, "Redis", "Redis", "Cache distribuído e Token Bucket")
-        ContainerDb(s3, "S3", "AWS S3", "Armazenamento de arquivos e relatórios")
-    }
+    /* Sistemas Externos */
+    Container(emailSvc, "Serviço de E-mail", "SMTP/SendGrid", "Envia notificações e NF-e")
+    Container(nfApi, "API de NFS-e Municipal", "SOAP/REST", "Emissão de notas fiscais eletrônicas")
+    Container(aws, "AWS", "ECS/EKS, RDS, S3", "Infraestrutura cloud")
 
+    /* Infraestrutura Interna */
+    ContainerDb(mysql, "MySQL/RDS", "MySQL", "Banco de dados relacional")
+    ContainerDb(rabbit, "RabbitMQ", "AMQP broker", "Filas de eventos")
+    ContainerDb(redis, "Redis", "Redis", "Cache distribuído e Token Bucket")
+
+    /* Relacionamentos */
     Rel(webApp, apiGateway, "REST")
     Rel(chatbotSvc, apiGateway, "REST / AMQP")
     Rel(apiGateway, reservationSvc, "gRPC/REST")
     Rel(apiGateway, roomSvc, "gRPC/REST")
     Rel(apiGateway, billingSvc, "gRPC/REST")
     Rel(apiGateway, notificationSvc, "REST (jobs)")
+
     Rel(reservationSvc, rabbit, "publica BookingCreated")
     Rel(billingSvc, rabbit, "publica InvoiceCreated")
     Rel(notificationSvc, rabbit, "consome eventos")
     Rel(reservationSvc, mysql, "CRUD via EF Core")
     Rel(roomSvc, redis, "lê/grava cache de disponibilidade")
-    Rel(billingSvc, nfApi, "SOAP/REST NF-e")
-    Rel(notificationSvc, emailSvc, "SMTP/SendGrid")
-    RelAll(notificationSvc, s3, "armazena relatórios")
+    Rel(billingSvc, nfApi, "SOAP/REST para emissão de NF-e")
+    Rel(notificationSvc, emailSvc, "SMTP para envio de e-mail")
+    Rel(notificationSvc, aws, "armazena relatórios em S3")
 
 ```
 
@@ -249,22 +251,27 @@ C4Component
 
     Container(reservationSvc, "Reservation Service", ".NET 7", "Gerencia reservas e publica eventos")
 
-    Component(API, "ReservationController", "ASP.NET Core", "Endpoints REST para criar/consultar reservas")
-    Component(Application, "ReservationUseCases", ".NET Classes", "Casos de uso: CreateBooking, CancelBooking, QueryAvailability")
-    Component(Domain, "Domain Model", ".NET Classes", "Entidades: Booking, ValueObjects, DomainEvents")
-    Component(Infrastructure, "ReservationRepository", "EF Core", "Persistência de reservas no MySQL")
-    Component(Messaging, "BookingPublisher", "MassTransit/RabbitMQ", "Publica eventos BookingCreated")
-    Component(Throttle, "TokenBucketMiddleware", "ASP.NET Core Middleware", "Limita taxa de requisições")
-    Component(Circuit, "CircuitBreakerMiddleware", "Polly", "Protege chamadas externas")
+    Component(controller, "ReservationController", "ASP.NET Core", "Expõe endpoints REST para reservas")
+    Component(useCases, "ReservationUseCases", ".NET Classes", "Casos de uso: Create, Cancel, QueryAvailability")
+    Component(domain, "Domain Model", ".NET Classes", "Entidades: Booking, Value Objects, Domain Events")
+    Component(repo, "ReservationRepository", "EF Core", "Persistência de reservas no MySQL")
+    Component(publisher, "BookingPublisher", "MassTransit/RabbitMQ", "Publica eventos BookingCreated")
+    Component(throttle, "TokenBucketMiddleware", "ASP.NET Core Middleware", "Limita taxa de requisições")
+    Component(circuit, "CircuitBreakerMiddleware", "Polly", "Isola falhas em chamadas externas")
 
-    Rel(API, Application, "invoca casos de uso")
-    Rel(Application, Domain, "aplica regras de negócio")
-    Rel(Application, Infrastructure, "persiste/consulta dados")
-    Rel(Application, Messaging, "publica BookingCreated")
-    Rel(API, Throttle, "passa requisições pelo token bucket")
-    Rel(API, Circuit, "passa requisições por circuit breaker")
-    Rel(Messaging, rabbit, "envia mensagem")
-    Rel(Infrastructure, mysql, "lê/grava reservas")
+    /* Recursos externos */
+    ContainerDb(rabbit, "RabbitMQ", "AMQP broker", "Filas de eventos")
+    ContainerDb(mysql, "MySQL/RDS", "MySQL", "Banco de dados relacional")
+
+    /* Fluxo e relacionamentos */
+    Rel(controller, throttle, "Passa requisições")
+    Rel(controller, circuit, "Passa requisições")
+    Rel(controller, useCases, "Invoca casos de uso")
+    Rel(useCases, domain, "Aplica regras de negócio")
+    Rel(useCases, repo, "Persiste/consulta dados")
+    Rel(useCases, publisher, "Publica BookingCreated")
+    Rel(repo, mysql, "CRUD")
+    Rel(publisher, rabbit, "Envia mensagens")
 
 
 ```
