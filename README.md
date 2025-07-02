@@ -59,13 +59,13 @@ O projeto nasceu para resolver problemas comuns e custosos no dia a dia hoteleir
 
 # 3. Especificação Técnica
 
-### 3.1. Resumo
+### 3.. Resumo
 
 O **AvenSuites** é uma plataforma multi‐serviço orientada a eventos, construída para orquestrar reservas, faturamento e notificações em hotéis. Cada microserviço segue DDD, expondo APIs REST/AMQP e publicando/consumindo eventos via RabbitMQ; o cache Redis e os mecanismos de resiliência (Token Bucket e Circuit Breaker) garantem performance e disponibilidade.
 
 ### 3.2. Componentes Principais do Sistema
 
-1. **API Gateway**
+. **API Gateway**
 
    - Roteia chamadas REST e WebSocket para os microserviços
    - Aplica autenticação, autorização e throttling (Token Bucket)
@@ -103,37 +103,37 @@ O **AvenSuites** é uma plataforma multi‐serviço orientada a eventos, constru
 ### 3.3. Requisitos de Software
 
 ### Módulo de Reserva
-- **RF-RES-001**: Criar uma nova reserva via API REST/WhatsApp (Baileys).  
+- **RF-RES-00**: Criar uma nova reserva via API REST/WhatsApp (Baileys).  
 - **RF-RES-002**: Consultar disponibilidade de quartos em tempo real.  
 - **RF-RES-003**: Listar reservas existentes por hóspede, data ou status.  
 - **RF-RES-004**: Atualizar/cancelar reserva, com publicação de evento `BookingCancelled` em RabbitMQ.  
 
 ### Módulo de Quarto
-- **RF-ROOM-001**: Cadastrar e editar informações de quartos (número, tipo, tarifa).  
+- **RF-ROOM-00**: Cadastrar e editar informações de quartos (número, tipo, tarifa).  
 - **RF-ROOM-002**: Marcar quarto como “manutenção” ou “indisponível”.  
 - **RF-ROOM-003**: Consultar status de ocupação e histórico de ocupações.  
 - **RF-ROOM-004**: Receber e processar eventos de reserva para atualizar cache Redis.  
 
 ### Módulo de Faturamento (Billing)
-- **RF-BIL-001**: Gerar Nota Fiscal Eletrônica (NF-e) a partir de reserva confirmada.  
+- **RF-BIL-00**: Gerar Nota Fiscal Eletrônica (NF-e) a partir de reserva confirmada.  
 - **RF-BIL-002**: Publicar evento `InvoiceCreated` em RabbitMQ após emissão de NF-e.  
 - **RF-BIL-003**: Integrar via SOAP/REST com ERP fiscal para validação e protocolo de NF-e.  
 - **RF-BIL-004**: Permitir consulta de XML/PDF da NF-e pelo painel administrativo.  
 
 ### Módulo de Notificações
-- **RF-NOT-001**: Consumir eventos `BookingCreated` e enviar e-mail de confirmação.  
+- **RF-NOT-00**: Consumir eventos `BookingCreated` e enviar e-mail de confirmação.  
 - **RF-NOT-002**: Consumir eventos `InvoiceCreated` e enviar e-mail com NF-e ao hóspede.  
 - **RF-NOT-003**: Agendar lembretes diários de check-out para hóspedes.  
 - **RF-NOT-004**: Expor endpoint para reenvio manual de notificações, se necessário.  
 
 ### Módulo de Chatbot (WhatsApp)
-- **RF-CBT-001**: Receber e interpretar comandos de reserva via WhatsApp (Baileys).  
+- **RF-CBT-00**: Receber e interpretar comandos de reserva via WhatsApp (Baileys).  
 - **RF-CBT-002**: Informar ao hóspede o status da reserva (confirmada, pendente, cancelada).  
 - **RF-CBT-003**: Enviar alertas e lembretes via WhatsApp (check-in, check-out, NF-e).  
 - **RF-CBT-004**: Publicar comandos/eventos em RabbitMQ para outros serviços consumirem.  
 
 ### Módulo Administrativo (Painel)
-- **RF-ADM-001**: Tela de login/autenticação com roles (funcionário, gestor).  
+- **RF-ADM-00**: Tela de login/autenticação com roles (funcionário, gestor).  
 - **RF-ADM-002**: Dashboard de KPIs (ocupação, receita, reservas por período).  
 - **RF-ADM-003**: CRUD completo de hóspedes, funcionários e configurações de hotel.  
 - **RF-ADM-004**: Filtros avançados (data, status, tipo de quarto) em listas de reservas e faturas.  
@@ -157,7 +157,7 @@ O **AvenSuites** é uma plataforma multi‐serviço orientada a eventos, constru
 
 - Circuit Breaker + Retry + Timeout
 - Token Bucket distribuído
-- TLS 1.2+ e AES-256
+- TLS .2+ e AES-256
 - Compliance LGPD
 
 ---
@@ -168,33 +168,30 @@ O **AvenSuites** é uma plataforma multi‐serviço orientada a eventos, constru
 
 ```mermaid
 C4Context
-    title AvenSuites – Visão de Contexto
+    title AvenSuites – Contexto do Sistema
 
-    %% Pessoas (Atores Externos)
-    Person(hospede, "🧍 Hóspede", "Realiza reservas e recebe confirmações")
-    Person(funcionario, "👩‍💼 Funcionário", "Gerencia quartos e reservas")
-    Person(gestor, "📊 Gestor/Dono", "Visualiza dashboards e relatórios")
+    Person(hospede, "Hóspede", "Reserva quartos e recebe confirmações")
+    Person(funcionario, "Funcionário", "Gerencia quartos, reservas e NF-e")
+    Person(gestor, "Gestor/Dono", "Monitora indicadores e relatórios")
 
-    %% Sistema Principal com Fronteira
-    System_Boundary(rs, "🐰 AvenSuites") {
-        System(chatbot, "🤖 Chatbot WhatsApp", "NestJS + Baileys – Atendimento e reservas")
-        System(webApp, "🖥️ Web App", "Next.js – Interface para equipe e gestão")
-        System(backend, "🧠 Backend/API Gateway", ".NET – Orquestra lógica, microserviços e eventos")
-        System(fiscal, "📄 ERP Fiscal Externo", "Integração para emissão de NF-e")
-        System(emailSvc, "✉️ Serviço de E-mail", "Envia NF-e e lembretes por SMTP ou API")
+    System_Boundary(avensuites, "AvenSuites") {
+        System(webApp, "Web App", "Next.js – Interface para funcionários e gestores")
+        System(chatbot, "Chatbot WhatsApp", "NestJS + Baileys – Atendimento e reservas")
+        System(api, "API Gateway + Microservices", ".NET 7 – Lógica de domínio e orquestração")
+        System(emailSvc, "Serviço de E-mail", "SMTP/SendGrid – Envio de notificações e NF-e")
+        System(nfApi, "API de NFS-e Municipal", "SOAP/REST – Emissão de notas fiscais eletrônicas")
+        System(aws, "Infraestrutura AWS", "ECS/EKS, RDS, S3, VPC")
     }
 
-    %% Interações com Usuários
-    Rel(hospede, chatbot, "Reserva / Consulta via WhatsApp")
-    Rel(hospede, webApp, "Reserva via Web")
-    Rel(funcionario, webApp, "Gerencia quartos, reservas e NF-e")
-    Rel(gestor, webApp, "Acessa dashboards e relatórios")
-
-    %% Interações internas do sistema
-    Rel(chatbot, backend, "REST / AMQP")
-    Rel(webApp, backend, "REST API")
-    Rel(backend, fiscal, "Integração NF-e (SOAP/REST)")
-    Rel(backend, emailSvc, "Envio de e-mails (SMTP/SendGrid)")
+    Rel(hospede, chatbot, "Faz reservas e recebe alertas")
+    Rel(hospede, webApp, "Faz reservas e consulta histórico")
+    Rel(funcionario, webApp, "CRUD quartos, reservas e consulta NF-e")
+    Rel(gestor, webApp, "Visualiza dashboards e relatórios")
+    Rel(webApp, api, "Chama APIs REST")
+    Rel(chatbot, api, "Chama APIs REST / publica eventos AMQP")
+    Rel(api, emailSvc, "Envia e-mails")
+    Rel(api, nfApi, "Solicita emissão de NF-e")
+    Rel(api, aws, "Armazena dados e executa contêineres")
 
 ```
 
@@ -202,25 +199,46 @@ C4Context
 
 ```mermaid
 C4Container
-    title AvenSuites – Containers
+    title AvenSuites – Contêineres
 
-    Container_Boundary(api_boundary, "Camada de API") {
-        Container(apiGateway, "API Gateway", "Ocelot/Kong/AWS", "Roteia chamadas REST/WS")
+    Container_Boundary(web_boundary, "Front-end") {
+        Container(webApp, "Web App", "Next.js", "Interface para funcionários e gestores")
     }
 
-    Container_Boundary(svc_boundary, "Serviços de Negócio") {
-        Container(reservationSvc, "Reservation Service", ".NET", "Gerencia reservas; publica BookingCreated")
-        Container(roomSvc, "Room Service", ".NET", "Gerencia quartos; cache Redis")
-        Container(billingSvc, "Billing Service", ".NET", "Gera NF-e; integra ERP")
-        Container(notificationSvc, "Notification Worker", ".NET + Hangfire", "Processa filas e envia e-mail")
-        Container(chatbotSvc, "Chatbot Service", "NestJS + Baileys", "Atende WhatsApp; usa RabbitMQ e Redis")
+    Container_Boundary(chat_boundary, "Chatbot") {
+        Container(chatbotSvc, "Chatbot Service", "NestJS + Baileys", "Atende WhatsApp e publica eventos")
     }
 
-    Container_Boundary(db_boundary, "Infraestrutura") {
-        ContainerDb(mysql, "MySQL/SQL Server", "RDS AWS", "Dados relacionais")
-        ContainerDb(rabbit, "RabbitMQ", "AMQP Broker", "Filas de reservas, faturamento e notificações")
-        ContainerDb(redis, "Redis", "Cache & TokenBucket", "Cache distribuído e throttling")
+    Container_Boundary(api_boundary, "Back-end") {
+        Container(apiGateway, "API Gateway", "Ocelot/Kong", "Roteia requisições REST/WS")
+        Container(reservationSvc, "Reservation Service", ".NET 7", "Gerencia reservas; publica eventos AMQP")
+        Container(roomSvc, "Room Service", ".NET 7", "Gerencia quartos; atualiza cache")
+        Container(billingSvc, "Billing Service", ".NET 7", "Gera NF-e; integra com NF-e API")
+        Container(notificationSvc, "Notification Worker", ".NET 7 + Hangfire", "Processa filas e envia e-mails")
     }
+
+    Container_Boundary(infra_boundary, "Infraestrutura") {
+        ContainerDb(mysql, "MySQL/RDS", "MySQL", "Dados relacionais")
+        ContainerDb(rabbit, "RabbitMQ", "AMQP Broker", "Filas de eventos")
+        ContainerDb(redis, "Redis", "Redis", "Cache distribuído e Token Bucket")
+        ContainerDb(s3, "S3", "AWS S3", "Armazenamento de arquivos e relatórios")
+    }
+
+    Rel(webApp, apiGateway, "REST")
+    Rel(chatbotSvc, apiGateway, "REST / AMQP")
+    Rel(apiGateway, reservationSvc, "gRPC/REST")
+    Rel(apiGateway, roomSvc, "gRPC/REST")
+    Rel(apiGateway, billingSvc, "gRPC/REST")
+    Rel(apiGateway, notificationSvc, "REST (jobs)")
+    Rel(reservationSvc, rabbit, "publica BookingCreated")
+    Rel(billingSvc, rabbit, "publica InvoiceCreated")
+    Rel(notificationSvc, rabbit, "consome eventos")
+    Rel(reservationSvc, mysql, "CRUD via EF Core")
+    Rel(roomSvc, redis, "lê/grava cache de disponibilidade")
+    Rel(billingSvc, nfApi, "SOAP/REST NF-e")
+    Rel(notificationSvc, emailSvc, "SMTP/SendGrid")
+    RelAll(notificationSvc, s3, "armazena relatórios")
+
 ```
 
 ### 3.7.3. Diagrama de Componentes (C4 Nível 3) – Reservation Service
@@ -229,27 +247,24 @@ C4Container
 C4Component
     title Reservation Service – Componentes Internos
 
-    %% Serviço principal como contêiner raiz
-    Container(reservationSvc, "🎯 Reservation Service", ".NET 7", "Gerencia reservas e publica eventos")
+    Container(reservationSvc, "Reservation Service", ".NET 7", "Gerencia reservas e publica eventos")
 
-    %% Camadas internas do serviço
-    Component(domain, "🧬 Domain Layer", "", "Entidades, ValueObjects, DomainServices, DomainEvents")
-    Component(app, "📦 Application Layer", "", "UseCases, Commands/Queries, DTOs, Interfaces")
-    Component(infra, "🛠️ Infrastructure Layer", "", "EF Core, RabbitMQ, Redis, TokenBucket")
-    Component(api, "🌐 API Layer", "", "Controllers, Middlewares (Circuit Breaker, Token Bucket), DI")
+    Component(API, "ReservationController", "ASP.NET Core", "Endpoints REST para criar/consultar reservas")
+    Component(Application, "ReservationUseCases", ".NET Classes", "Casos de uso: CreateBooking, CancelBooking, QueryAvailability")
+    Component(Domain, "Domain Model", ".NET Classes", "Entidades: Booking, ValueObjects, DomainEvents")
+    Component(Infrastructure, "ReservationRepository", "EF Core", "Persistência de reservas no MySQL")
+    Component(Messaging, "BookingPublisher", "MassTransit/RabbitMQ", "Publica eventos BookingCreated")
+    Component(Throttle, "TokenBucketMiddleware", "ASP.NET Core Middleware", "Limita taxa de requisições")
+    Component(Circuit, "CircuitBreakerMiddleware", "Polly", "Protege chamadas externas")
 
-    %% Recursos externos
-    ContainerDb(rabbit, "📨 RabbitMQ", "AMQP Broker", "Filas: reservas, faturamento, notificações")
-    ContainerDb(redis, "⚡ Redis", "Cache Distribuído + TokenBucket", "Cache de dados quentes e throttling")
-
-    %% Relacionamentos internos
-    Rel(api, app, "Invoca UseCases")
-    Rel(app, domain, "Aplica regras de negócio")
-    Rel(app, infra, "Usa infraestrutura (DB, fila, cache)")
-
-    %% Interações com recursos externos
-    Rel(infra, rabbit, "📤 Publica eventos: BookingCreated, InvoiceCreated")
-    Rel(infra, redis, "📥 Consulta/atualiza cache e token bucket")
+    Rel(API, Application, "invoca casos de uso")
+    Rel(Application, Domain, "aplica regras de negócio")
+    Rel(Application, Infrastructure, "persiste/consulta dados")
+    Rel(Application, Messaging, "publica BookingCreated")
+    Rel(API, Throttle, "passa requisições pelo token bucket")
+    Rel(API, Circuit, "passa requisições por circuit breaker")
+    Rel(Messaging, rabbit, "envia mensagem")
+    Rel(Infrastructure, mysql, "lê/grava reservas")
 
 
 ```
